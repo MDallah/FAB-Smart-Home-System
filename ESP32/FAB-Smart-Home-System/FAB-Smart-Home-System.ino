@@ -1,20 +1,19 @@
-/*********
-  Rui Santos
-  Complete project details at https://randomnerdtutorials.com
-*********/
-
 // Import required libraries
 #include "WiFi.h"
 #include "ESPAsyncWebServer.h"
 #include "SPIFFS.h"
 
-// Replace with your network credentials
+// WiFi SSID & Password
 const char* ssid = "P48";
 const char* password = "11223344556677889900";
+
+// TODO: Add host name.
+// TODO: Add Static IP.
 
 // Set LED GPIO
 const int ledPin1 = 2;
 const int ledPin2 = 4;
+
 // Stores LED state
 String ledState1;
 String ledState2;
@@ -24,8 +23,7 @@ AsyncWebServer server(80);
 
 // Replaces placeholder with LED state value
 String processor(const String& var) {
-  Serial.println("----------------");
-  Serial.println(var);
+  Serial.print(var +" -> " );
   if (var == "STATE1") {
     if (digitalRead(ledPin1)) {
       ledState1 = "ON";
@@ -44,7 +42,9 @@ String processor(const String& var) {
       ledState2 = "OFF";
     }
     Serial.println(ledState2);
+    Serial.println("----------------------");
     return ledState2;
+
   }
   return String();
 }
@@ -52,6 +52,8 @@ String processor(const String& var) {
 void setup() {
   // Serial port for debugging purposes
   Serial.begin(115200);
+  delay(100);
+
   pinMode(ledPin1, OUTPUT);
   pinMode(ledPin2, OUTPUT);
 
@@ -61,16 +63,54 @@ void setup() {
     return;
   }
 
-  // Connect to Wi-Fi
+  // Connect to Wi-Fi & print IP
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi..");
+  waitForWiFiConnectOrReboot(true);
+
+  setupServer();
+}
+
+void loop() {
+
+}
+
+// Wait for WiFi connection, and, if not connected, reboot
+void waitForWiFiConnectOrReboot(bool printOnSerial)
+{
+  uint32_t notConnectedCounter = 0;
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(100);
+    if (printOnSerial)
+    {
+      Serial.print(".");
+    }
+    notConnectedCounter++;
+    if (notConnectedCounter > 50)
+    { // Reset board if not connected after 5s
+      if (printOnSerial)
+      {
+        Serial.println("");
+        Serial.println("------------------------------------------------------");
+        Serial.println("Resetting due to Wifi not connecting...");
+        Serial.println("------------------------------------------------------");
+      }
+      ESP.restart();
+    }
   }
+  if (printOnSerial)
+  {
+    // Print wifi IP addess
+    Serial.println("");
+    Serial.println("WiFi connected..!");
+    Serial.print("Got IP: ");
+    Serial.println(WiFi.localIP());
+  }
+}
 
-  // Print ESP32 Local IP Address
-  Serial.println(WiFi.localIP());
-
+// Setup Server
+void setupServer()
+{
   // Route for root / web page
   server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
     request->send(SPIFFS, "/index.html", String(), false, processor);
@@ -81,7 +121,7 @@ void setup() {
     request->send(SPIFFS, "/style.css", "text/css");
   });
 
-  // Route to set GPIO to HIGH
+  // Route to change GPIO
   server.on("/1", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (digitalRead(ledPin1)) {
       digitalWrite(ledPin1, LOW);
@@ -104,8 +144,5 @@ void setup() {
 
   // Start server
   server.begin();
-}
-
-void loop() {
-
+  Serial.println("HTTP server started");
 }
