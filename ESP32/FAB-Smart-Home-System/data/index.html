@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>ESP32 Web Server</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="data:,">
+  <link rel="icon" href="Smart-Home.png">
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
+
 <body>
   <h1>ESP32 Web Server</h1>
 
   <p><a href="/1"><button id="btn1" class="button">%STATE1%</button></a></p>
   <p><a href="/2"><button id="btn2" class="button">%STATE2%</button></a></p>
-  
-  <script>
-   if (document.getElementById('btn1').innerText=="OFF") {
-     document.getElementById('btn1').className += " OFF";
-   }
 
-   if (document.getElementById('btn2').innerText == "OFF") {
-      document.getElementById('btn2').className += " OFF";
+  <script>
+    if (document.getElementById("btn1").innerText == "OFF") {
+      document.getElementById("btn1").className += " OFF";
+    }
+
+    if (document.getElementById("btn2").innerText == "OFF") {
+      document.getElementById("btn2").className += " OFF";
     }
   </script>
 </body>
+
 </html>
