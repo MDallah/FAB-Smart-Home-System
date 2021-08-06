@@ -4,11 +4,17 @@
 #include "SPIFFS.h"
 
 // WiFi SSID & Password
-const char* ssid = "P48";
+const char* ssid = "FAB-Smart-Home";
 const char* password = "11223344556677889900";
 
-// TODO: Add host name.
-// TODO: Add Static IP.
+// TODO: Add host name by Wifi access.
+
+// Static IP address to SoftAP
+IPAddress local_ip(192,168,1,1);
+// Gateway IP address to SoftAP
+IPAddress gateway(192,168,1,1);
+
+IPAddress subnet(255, 255, 255, 0);
 
 // Set LED GPIO
 const int ledPin1 = 2;
@@ -64,9 +70,15 @@ void setup() {
   }
 
   // Connect to Wi-Fi & print IP
-  WiFi.begin(ssid, password);
-  waitForWiFiConnectOrReboot(true);
+  // WiFi.begin(ssid, password);
+  // waitForWiFiConnectOrReboot(true);
 
+  // Initialize AP (Access Point)
+  WiFi.softAP(ssid, password);
+  // Configure AP (Access Point)
+  WiFi.softAPConfig(local_ip, gateway, subnet);
+  delay(100);
+  
   setupServer();
 }
 
