@@ -10,9 +10,9 @@ const char* password = "11223344556677889900";
 // TODO: Add host name by Wifi access.
 
 // Static IP address to SoftAP
-IPAddress local_ip(192,168,1,1);
+IPAddress local_ip(192, 168, 1, 1);
 // Gateway IP address to SoftAP
-IPAddress gateway(192,168,1,1);
+IPAddress gateway(192, 168, 1, 1);
 
 IPAddress subnet(255, 255, 255, 0);
 
@@ -29,7 +29,7 @@ AsyncWebServer server(80);
 
 // Replaces placeholder with LED state value
 String processor(const String& var) {
-  Serial.print(var +" -> " );
+  Serial.print(var + " -> " );
   if (var == "STATE1") {
     if (digitalRead(ledPin1)) {
       ledState1 = "ON";
@@ -78,7 +78,7 @@ void setup() {
   // Configure AP (Access Point)
   WiFi.softAPConfig(local_ip, gateway, subnet);
   delay(100);
-  
+
   setupServer();
 }
 
@@ -133,7 +133,17 @@ void setupServer()
     request->send(SPIFFS, "/style.css", "text/css");
   });
 
-  // Route to change GPIO
+  // Route to load FABMationLogo.png file
+  server.on("/FABMationLogo.png", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request->send(SPIFFS, "/FABMationLogo.png", "image/png");
+  });
+
+  // Route to load SmartHome.png file
+  server.on("/SmartHome.png", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request->send(SPIFFS, "/SmartHome.png", "image/png");
+  });
+
+  // Route to change GPIO status
   server.on("/1", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (digitalRead(ledPin1)) {
       digitalWrite(ledPin1, LOW);
