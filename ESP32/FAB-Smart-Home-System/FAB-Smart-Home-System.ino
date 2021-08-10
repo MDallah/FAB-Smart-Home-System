@@ -30,14 +30,32 @@ DHT dht(DHTPIN, DHTTYPE);
 
 
 // Set LED GPIO
-const int ledPin1 = 25;
-const int ledPin2 = 32;
+const int mr1Pin = 25;
+const int mr2Pin = 32;
+const int kPin = 32;
+const int skPin = 32;
+const int aPin = 32;
+const int c1Pin = 32;
+const int c2Pin = 32;
+const int sPin = 32;
+const int d1Pin = 32;
+const int d2Pin = 32;
+const int dgPin = 32;
 
 
 
 // Stores LED state
-String ledState1;
-String ledState2;
+String mr1State;
+String mr2State;
+String kState;
+String skState;
+String aState;
+String c1State;
+String c2State;
+String sState;
+String d1State;
+String d2State;
+String dgState;
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -45,26 +63,134 @@ AsyncWebServer server(80);
 // Replaces placeholder with LED state value
 String processor(const String& var) {
   Serial.print(var + " -> " );
-  if (var == "STATE1") {
-    if (digitalRead(ledPin1)) {
-      ledState1 = "ON";
+  if (var == "MR1") {
+    if (digitalRead(mr1Pin)) {
+      mr1State = "1";
     }
     else {
-      ledState1 = "OFF";
+      mr1State = "0";
     }
-    Serial.println(ledState1);
-    return ledState1;
+    Serial.println(mr1State);
+    return mr1State;
   }
-  if (var == "STATE2") {
-    if (digitalRead(ledPin2)) {
-      ledState2 = "ON";
+  if (var == "MR2") {
+    if (digitalRead(mr2Pin)) {
+      mr2State = "1";
     }
     else {
-      ledState2 = "OFF";
+      mr2State = "0";
     }
-    Serial.println(ledState2);
+    Serial.println(mr2State);
     Serial.println("----------------------");
-    return ledState2;
+    return mr2State;
+
+  }
+  if (var == "K") {
+    if (digitalRead(kPin)) {
+      kState = "1";
+    }
+    else {
+      kState = "0";
+    }
+    Serial.println(kState);
+    Serial.println("----------------------");
+    return kState;
+
+  }
+  if (var == "SK") {
+    if (digitalRead(skPin)) {
+      skState = "1";
+    }
+    else {
+      skState = "0";
+    }
+    Serial.println(skState);
+    Serial.println("----------------------");
+    return skState;
+
+  }
+  if (var == "A") {
+    if (digitalRead(aPin)) {
+      aState = "1";
+    }
+    else {
+      aState = "0";
+    }
+    Serial.println(aState);
+    Serial.println("----------------------");
+    return aState;
+
+  }
+  if (var == "C1") {
+    if (digitalRead(c1Pin)) {
+      c1State = "1";
+    }
+    else {
+      c1State = "0";
+    }
+    Serial.println(c1State);
+    Serial.println("----------------------");
+    return c1State;
+
+  }
+  if (var == "C2") {
+    if (digitalRead(c2Pin)) {
+      c2State = "1";
+    }
+    else {
+      c2State = "0";
+    }
+    Serial.println(c2State);
+    Serial.println("----------------------");
+    return c2State;
+
+  }
+  if (var == "S") {
+    if (digitalRead(sPin)) {
+      sState = "1";
+    }
+    else {
+      sState = "0";
+    }
+    Serial.println(sState);
+    Serial.println("----------------------");
+    return sState;
+
+  }
+  if (var == "D1") {
+    if (digitalRead(d1Pin)) {
+      d1State = "1";
+    }
+    else {
+      d1State = "0";
+    }
+    Serial.println(d1State);
+    Serial.println("----------------------");
+    return d1State;
+
+  }
+  if (var == "D2") {
+    if (digitalRead(d2Pin)) {
+      d2State = "1";
+    }
+    else {
+      d2State = "0";
+    }
+    Serial.println(d2State);
+    Serial.println("----------------------");
+    return d2State;
+
+  }
+  if (var == "DG") {
+    if (digitalRead(dgPin)) {
+      dgState = "1";
+    }
+    else {
+      dgState = "0";
+    }
+    Serial.println(dgState);
+    Serial.println("----------------------");
+    return dgState;
 
   }
   return String();
@@ -75,8 +201,17 @@ void setup() {
   Serial.begin(115200);
   delay(100);
 
-  pinMode(ledPin1, OUTPUT);
-  pinMode(ledPin2, OUTPUT);
+  pinMode(mr1Pin, OUTPUT);
+  pinMode(mr2Pin, OUTPUT);
+  pinMode(kPin, OUTPUT);
+  pinMode(skPin, OUTPUT);
+  pinMode(aPin, OUTPUT);
+  pinMode(c1Pin, OUTPUT);
+  pinMode(c2Pin, OUTPUT);
+  pinMode(sPin, OUTPUT);
+  pinMode(d1Pin, OUTPUT);
+  pinMode(d2Pin, OUTPUT);
+  pinMode(dgPin, OUTPUT);
 
   // Initialize SPIFFS
   if (!SPIFFS.begin(true)) {
@@ -193,22 +328,103 @@ void setupServer()
   });
 
   // Route to change GPIO status
-  server.on("/1", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (digitalRead(ledPin1)) {
-      digitalWrite(ledPin1, LOW);
+  server.on("/mr1", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (digitalRead(mr1Pin)) {
+      digitalWrite(mr1Pin, LOW);
     }
     else {
-      digitalWrite(ledPin1, HIGH);
+      digitalWrite(mr1Pin, HIGH);
     }
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });
 
-  server.on("/2", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (digitalRead(ledPin2)) {
-      digitalWrite(ledPin2, LOW);
+  server.on("/mr2", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (digitalRead(mr2Pin)) {
+      digitalWrite(mr2Pin, LOW);
     }
     else {
-      digitalWrite(ledPin2, HIGH);
+      digitalWrite(mr2Pin, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+  server.on("/k", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (digitalRead(kPin)) {
+      digitalWrite(kPin, LOW);
+    }
+    else {
+      digitalWrite(kPin, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+  server.on("/sk", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (digitalRead(skPin)) {
+      digitalWrite(skPin, LOW);
+    }
+    else {
+      digitalWrite(skPin, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+  server.on("/a", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (digitalRead(aPin)) {
+      digitalWrite(aPin, LOW);
+    }
+    else {
+      digitalWrite(aPin, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+  server.on("/c1", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (digitalRead(c1Pin)) {
+      digitalWrite(c1Pin, LOW);
+    }
+    else {
+      digitalWrite(c1Pin, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+  server.on("/c2", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (digitalRead(c2Pin)) {
+      digitalWrite(c2Pin, LOW);
+    }
+    else {
+      digitalWrite(c2Pin, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+  server.on("/s", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (digitalRead(sPin)) {
+      digitalWrite(sPin, LOW);
+    }
+    else {
+      digitalWrite(sPin, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+  server.on("/d1", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (digitalRead(d1Pin)) {
+      digitalWrite(d1Pin, LOW);
+    }
+    else {
+      digitalWrite(d1Pin, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+  server.on("/d2", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (digitalRead(d2Pin)) {
+      digitalWrite(d2Pin, LOW);
+    }
+    else {
+      digitalWrite(d2Pin, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+  server.on("/dg", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (digitalRead(dgPin)) {
+      digitalWrite(dgPin, LOW);
+    }
+    else {
+      digitalWrite(dgPin, HIGH);
     }
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });

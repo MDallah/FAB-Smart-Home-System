@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>ESP32 Web Server</title>
+  <title>FAB-Smart-Home-System</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
   <meta content="utf-8" http-equiv="encoding">
@@ -12,7 +12,9 @@
 </head>
 
 <body>
-  <!--<h1>ESP32 Web Server</h1>-->
+
+  <!-- Header -->
+
   <div class="grid-container">
     <div class="header header-room">
       <img class="logo" src="FABMationLogo.png">
@@ -32,53 +34,89 @@
         <p>2022</p>
       </div>
     </div>
+
+    <!-- Rooms -->
+
     <div class="meetingraum">
+      <a id="mr1" class="circleBtn button-on" href="/mr1">%MR1%</a>
       <p>Meeting room</p>
-      <a class="circleBtn button-on" href="/meeting-room-off">1</a>
+      <!-- <p><a href="/mr2"><button id="mr2" class="circleBtn button-on">%MR2%</button></a></p> -->
+      <a id="mr2" class="circleBtn button-on" href="/mr2">%MR2%</a>
     </div>
     <div class="room">
-      <p>Kitchen</p><a class="circleBtn button-off" href="/led1off">0</a>
+      <p>Kitchen</p><a id="k" class="circleBtn button-on" href="/k">%K%</a>
     </div>
     <div class="room">
-      <p>Sekretariat</p><a class="circleBtn button-on" href="/led1on">1</a>
+      <p>Sekretariat</p><a id="sk" class="circleBtn button-on" href="/sk">%SK%</a>
     </div>
     <div class="room">
-      <p>Administration</p><a class="circleBtn button-on" href="/led1on">1</a>
+      <p>Administration</p><a id="a" class="circleBtn button-on" href="/a">%A%</a>
     </div>
+
     <!-- Corridor -->
+
     <div class="corridor">
-      <div class="corridor-room"><a class=" circleBtn button-on" href="/led1on">1</a></div>
+      <div class="corridor-room"><a id="c1" class="circleBtn button-on" href="/c1">%C1%</a></div>
       <div class="corridor-room">
         <p class="corridor-room">Corridor</p>
       </div>
-      <div class="corridor-room"><a class="circleBtn button-on" href="/led1on">1</a></div>
+      <div class="corridor-room"><a id="c2" class="circleBtn button-on" href="/c2">%C2%</a></div>
     </div>
+
+    <!-- Rooms -->
+
     <div class="room">
       <p>Server room</p>
-      <a class="circleBtn button-on" href="/server-room-off">1</a>
+      <a id="s" class="circleBtn button-on" href="/s">%S%</a>
       <p class="temp"> 25&#8451; </p>
     </div>
     <div class="room">
-      <p>Developer R1</p><a class="circleBtn button-on" href="/led1on">1</a>
+      <p>Developer R1</p><a id="d1" class="circleBtn button-on" href="/d1">%D1%</a>
     </div>
     <div class="room">
-      <p>Devoloper R2</p><a class="circleBtn button-off" href="/led1off">0</a>
+      <p>Devoloper R2</p><a id="d2" class="circleBtn button-on" href="/d2">%D2%</a>
     </div>
     <div class="room">
-      <p>Designer</p><a class="circleBtn button-on" href="/led1on">1</a>
+      <p>Designer</p><a id="dg" class="circleBtn button-on" href="/dg">%DG%</a>
     </div>
   </div>
 
-  <p><a href="/1"><button id="btn1" class="button">%STATE1%</button></a></p>
-  <p><a href="/2"><button id="btn2" class="button">%STATE2%</button></a></p>
-
   <script>
-    if (document.getElementById("btn1").innerText == "OFF") {
-      document.getElementById("btn1").className += " OFF";
+    if (document.getElementById("mr1").innerText == 0) {
+      document.getElementById("mr1").className += " button-off";
     }
 
-    if (document.getElementById("btn2").innerText == "OFF") {
-      document.getElementById("btn2").className += " OFF";
+    if (document.getElementById("mr2").innerText == 0) {
+      document.getElementById("mr2").className += " button-off";
+    }
+
+    if (document.getElementById("k").innerText == 0) {
+      document.getElementById("k").className += " button-off";
+    }
+
+    if (document.getElementById("sk").innerText == 0) {
+      document.getElementById("sk").className += " button-off";
+    }
+    if (document.getElementById("a").innerText == 0) {
+      document.getElementById("a").className += " button-off";
+    }
+    if (document.getElementById("c1").innerText == 0) {
+      document.getElementById("c1").className += " button-off";
+    }
+    if (document.getElementById("c2").innerText == 0) {
+      document.getElementById("c2").className += " button-off";
+    }
+    if (document.getElementById("s").innerText == 0) {
+      document.getElementById("s").className += " button-off";
+    }
+    if (document.getElementById("d1").innerText == 0) {
+      document.getElementById("d1").className += " button-off";
+    }
+    if (document.getElementById("d2").innerText == 0) {
+      document.getElementById("d2").className += " button-off";
+    }
+    if (document.getElementById("dg").innerText == 0) {
+      document.getElementById("dg").className += " button-off";
     }
   </script>
 </body>
