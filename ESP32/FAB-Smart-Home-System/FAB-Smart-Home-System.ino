@@ -39,6 +39,9 @@ IPAddress subnet(255, 255, 255, 0);
 // Initialize DHT sensor.
 DHT dht(DHTPIN, DHTTYPE);
 
+
+float temperature = 0.0;
+
 // Stores LED state
 String mr1State;
 String mr2State;
@@ -212,6 +215,12 @@ String processor(const String &var)
     Serial.println("----------------------");
     return dgState;
   }
+  if (var == "TEMPERATURE")
+  {
+    Serial.println(temperature);
+    Serial.println("----------------------");
+    return readTemperature();
+  }
   return String();
 }
 
@@ -252,44 +261,6 @@ void setup()
 
   dht.begin();
   setupServer();
-}
-
-void loop()
-{
-  //  // Wait a few seconds between measurements.
-  //  delay(2000);
-  //
-  //  // Reading temperature or humidity takes about 250 milliseconds!
-  //  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-  //  float h = dht.readHumidity();
-  //  // Read temperature as Celsius (the default)
-  //  float t = dht.readTemperature();
-  //  // Read temperature as Fahrenheit (isFahrenheit = true)
-  //  float f = dht.readTemperature(true);
-  //
-  //  // Check if any reads failed and exit early (to try again).
-  //  if (isnan(h) || isnan(t) || isnan(f))
-  //  {
-  //    Serial.println(F("Failed to read from DHT sensor!"));
-  //    return;
-  //  }
-  //
-  //  // Compute heat index in Fahrenheit (the default)
-  //  float hif = dht.computeHeatIndex(f, h);
-  //  // Compute heat index in Celsius (isFahreheit = false)
-  //  float hic = dht.computeHeatIndex(t, h, false);
-  //
-  //  Serial.print(F("Humidity: "));
-  //  Serial.print(h);
-  //  Serial.print(F("%  Temperature: "));
-  //  Serial.print(t);
-  //  Serial.print(F("°C "));
-  //  Serial.print(f);
-  //  Serial.print(F("°F  Heat index: "));
-  //  Serial.print(hic);
-  //  Serial.print(F("°C "));
-  //  Serial.print(hif);
-  //  Serial.println(F("°F"));
 }
 
 // Wait for WiFi connection, and, if not connected, reboot
@@ -344,6 +315,10 @@ void setupServer()
   // Route to load SmartHome.png file
   server.on("/SmartHome.png", HTTP_GET, [](AsyncWebServerRequest *request)
             { request->send(SPIFFS, "/SmartHome.png", "image/png"); });
+
+  // Route to load temperature
+  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send_P(200, "text/plain", readTemperature().c_str()); });
 
   // Route to change GPIO status
   server.on("/mr1", HTTP_GET, [](AsyncWebServerRequest *request)
@@ -492,4 +467,28 @@ void setupServer()
   // Start server
   server.begin();
   Serial.println("HTTP server started");
+}
+
+String readTemperature()
+{
+  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+  // Read temperature as Celsius (the default)
+  temperature = dht.readTemperature();
+  // Read temperature as Fahrenheit (isFahrenheit = true)
+  //float temperature = dht.readTemperature(true);
+  // Check if any reads failed and exit early (to try again).
+  if (isnan(temperature))
+  {
+    Serial.println("Failed to read from DHT sensor!");
+    return "--";
+  }
+  else
+  {
+    Serial.println("Temp: " + temperature);
+    return String(temperature);
+  }
+}
+
+void loop()
+{
 }
