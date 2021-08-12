@@ -3,19 +3,24 @@
 #include "ESPAsyncWebServer.h"
 #include "SPIFFS.h"
 #include "DHT.h"
+#include "ESP32_MailClient.h"
+
+String conMode = "Wifi";
 
 // WiFi SSID & Password
 const char *ssid = "FAB-Smart-Home";
 const char *password = "11223344556677889900";
-
 // TODO: Add host name by Wifi access.
 
 // Static IP address to SoftAP
 IPAddress local_ip(192, 168, 1, 1);
 // Gateway IP address to SoftAP
 IPAddress gateway(192, 168, 1, 1);
-
 IPAddress subnet(255, 255, 255, 0);
+// WiFi SSID & Password
+const char *wifiSsid = "DRAGON";
+const char *wifiPass = "P48palaestina";
+// TODO: Add host name by Wifi access.
 
 // Set GPIO
 #define DHTPIN 33 // musst be a input digital pin
@@ -39,8 +44,22 @@ IPAddress subnet(255, 255, 255, 0);
 // Initialize DHT sensor.
 DHT dht(DHTPIN, DHTTYPE);
 
-
 float temperature = 0.0;
+
+// To send Email using Gmail use port 465 (SSL) and SMTP Server smtp.gmail.com
+// YOU MUST ENABLE less secure app option https://myaccount.google.com/lesssecureapps?pli=1
+#define emailSenderAccount ""
+#define emailSenderPassword ""
+#define smtpServer "smtp.gmail.com"
+#define smtpServerPort 465
+#define emailSubject "[ALERT] Server Room Temperature"
+// Default Recipient Email Address
+String Recipient = "";
+// Default Threshold Temperature Value
+String emailMessage;
+bool emailSent = false;
+// The Email Sending data object contains config and data to send
+SMTPData smtpData;
 
 // Stores LED state
 String mr1State;
@@ -249,14 +268,19 @@ void setup()
     return;
   }
 
-  // Connect to Wi-Fi & print IP
-  // WiFi.begin(ssid, password);
-  // waitForWiFiConnectOrReboot(true);
-
-  // Initialize AP (Access Point)
-  WiFi.softAP(ssid, password);
-  // Configure AP (Access Point)
-  WiFi.softAPConfig(local_ip, gateway, subnet);
+  if (conMode == "softAP")
+  {
+    // Initialize AP (Access Point)
+    WiFi.softAP(ssid, password);
+    // Configure AP (Access Point)
+    WiFi.softAPConfig(local_ip, gateway, subnet);
+  }
+  else if (conMode == "Wifi")
+  {
+    // Connect to Wi-Fi & print IP
+    WiFi.begin(wifiSsid, wifiPass);
+    waitForWiFiConnectOrReboot(true);
+  }
   delay(100);
 
   dht.begin();
@@ -484,8 +508,65 @@ String readTemperature()
   }
   else
   {
-    Serial.println("Temp: " + temperature);
+    Serial.print("Temp: ");
+    Serial.println(temperature);
+    if (temperature > 30 && !emailSent)
+    {
+      sendEmail();
+    }
     return String(temperature);
+  }
+}
+
+bool sendEmail()
+{
+  // Set the SMTP Server Email host, port, account and password
+  smtpData.setLogin(smtpServer, smtpServerPort, emailSenderAccount, emailSenderPassword);
+
+  // For library version 1.2.0 and later which STARTTLS protocol was supported,the STARTTLS will be
+  // enabled automatically when port 587 was used, or enable it manually using setSTARTTLS function.
+  //smtpData.setSTARTTLS(true);
+
+  // Set the sender name and Email
+  smtpData.setSender("FAB-Smart-Home-System", emailSenderAccount);
+
+  // Set Email priority or importance High, Normal, Low or 1 to 5 (1 is highest)
+  smtpData.setPriority("High");
+
+  // Set the subject
+  smtpData.setSubject(emailSubject);
+
+  // Set the message with HTML format
+  emailMessage = String(temperature);
+  smtpData.setMessage(emailMessage, true);
+
+  // Add recipients
+  smtpData.addRecipient(Recipient);
+
+  smtpData.setSendCallback(sendCallback);
+
+  // Start sending Email, can be set callback function to track the status
+  if (!MailClient.sendMail(smtpData))
+  {
+    Serial.println("Error sending Email, " + MailClient.smtpErrorReason());
+    return false;
+  }
+  // Clear all data from Email object to free memory
+  smtpData.empty();
+  return true;
+}
+
+// Callback function to get the Email sending status
+void sendCallback(SendStatus msg)
+{
+  // Print the current status
+  Serial.println(msg.info());
+
+  // Do something when complete
+  if (msg.success())
+  {
+    emailSent = true;
+    Serial.println("----------------");
   }
 }
 
