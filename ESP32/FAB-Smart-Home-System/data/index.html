@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
   <meta content="utf-8" http-equiv="encoding">
-
   <link rel="icon" href="SmartHome.png">
   <link rel="stylesheet" type="text/css" href="style.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
@@ -39,37 +38,37 @@
 
     <!-- Rooms -->
 
-    <div class="meetingraum">
-      <a id="mr1" class="circleBtn button-on" href="/mr1">%MR1%</a>
+    <div class="meeting-room">
+      <a id="mr1" class="circleBtn on" href="/mr1">%MR1%</a>
       <p>Meeting room</p>
-      <!-- <p><a href="/mr2"><button id="mr2" class="circleBtn button-on">%MR2%</button></a></p> -->
-      <a id="mr2" class="circleBtn button-on" href="/mr2">%MR2%</a>
+      <!-- <p><a href="/mr2"><button id="mr2" class="circleBtn on">%MR2%</button></a></p> -->
+      <a id="mr2" class="circleBtn on" href="/mr2">%MR2%</a>
     </div>
     <div class="room">
-      <p>Kitchen</p><a id="k" class="circleBtn button-on" href="/k">%K%</a>
+      <p>Kitchen</p><a id="k" class="circleBtn on" href="/k">%K%</a>
     </div>
     <div class="room">
-      <p>Sekretariat</p><a id="sk" class="circleBtn button-on" href="/sk">%SK%</a>
+      <p>Secretariat</p><a id="sk" class="circleBtn on" href="/sk">%SK%</a>
     </div>
     <div class="room">
-      <p>Administration</p><a id="a" class="circleBtn button-on" href="/a">%A%</a>
+      <p>Administration</p><a id="a" class="circleBtn on" href="/a">%A%</a>
     </div>
 
     <!-- Corridor -->
 
     <div class="corridor">
-      <div class="corridor-room"><a id="c1" class="circleBtn button-on" href="/c1">%C1%</a></div>
+      <div class="corridor-room"><a id="c1" class="circleBtn on" href="/c1">%C1%</a></div>
       <div class="corridor-room">
         <p class="corridor-room">Corridor</p>
       </div>
-      <div class="corridor-room"><a id="c2" class="circleBtn button-on" href="/c2">%C2%</a></div>
+      <div class="corridor-room"><a id="c2" class="circleBtn on" href="/c2">%C2%</a></div>
     </div>
 
     <!-- Rooms -->
 
     <div class="room">
       <p>Server room</p>
-      <a id="s" class="circleBtn button-on" href="/s">%S%</a>
+      <a id="s" class="circleBtn on" href="/s">%S%</a>
       <p>
         <i class="fas fa-thermometer-half" style="color:#000000c9;"></i>
         <span id="temperature"> %TEMPERATURE%</span>
@@ -77,64 +76,64 @@
       </p>
     </div>
     <div class="room">
-      <p>Developer R1</p><a id="d1" class="circleBtn button-on" href="/d1">%D1%</a>
+      <p>Developer R1</p><a id="d1" class="circleBtn on" href="/d1">%D1%</a>
     </div>
     <div class="room">
-      <p>Devoloper R2</p><a id="d2" class="circleBtn button-on" href="/d2">%D2%</a>
+      <p>Developer R2</p><a id="d2" class="circleBtn on" href="/d2">%D2%</a>
     </div>
     <div class="room">
-      <p>Designer</p><a id="dg" class="circleBtn button-on" href="/dg">%DG%</a>
+      <p>Designer</p><a id="dg" class="circleBtn on" href="/dg">%DG%</a>
     </div>
   </div>
 
   <script>
     if (document.getElementById("mr1").innerText == 0) {
-      document.getElementById("mr1").className += " button-off";
+      document.getElementById("mr1").className += " off";
     }
 
     if (document.getElementById("mr2").innerText == 0) {
-      document.getElementById("mr2").className += " button-off";
+      document.getElementById("mr2").className += " off";
     }
 
     if (document.getElementById("k").innerText == 0) {
-      document.getElementById("k").className += " button-off";
+      document.getElementById("k").className += " off";
     }
 
     if (document.getElementById("sk").innerText == 0) {
-      document.getElementById("sk").className += " button-off";
+      document.getElementById("sk").className += " off";
     }
     if (document.getElementById("a").innerText == 0) {
-      document.getElementById("a").className += " button-off";
+      document.getElementById("a").className += " off";
     }
     if (document.getElementById("c1").innerText == 0) {
-      document.getElementById("c1").className += " button-off";
+      document.getElementById("c1").className += " off";
     }
     if (document.getElementById("c2").innerText == 0) {
-      document.getElementById("c2").className += " button-off";
+      document.getElementById("c2").className += " off";
     }
     if (document.getElementById("s").innerText == 0) {
-      document.getElementById("s").className += " button-off";
+      document.getElementById("s").className += " off";
     }
     if (document.getElementById("d1").innerText == 0) {
-      document.getElementById("d1").className += " button-off";
+      document.getElementById("d1").className += " off";
     }
     if (document.getElementById("d2").innerText == 0) {
-      document.getElementById("d2").className += " button-off";
+      document.getElementById("d2").className += " off";
     }
     if (document.getElementById("dg").innerText == 0) {
-      document.getElementById("dg").className += " button-off";
+      document.getElementById("dg").className += " off";
     }
 
     setInterval(function () {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-          if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("temperature").innerHTML = this.responseText;
-          }
-        };
-        xhttp.open("GET", "/temperature", true);
-        xhttp.send();
-      }, 10000);
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("temperature").innerHTML = this.responseText;
+        }
+      };
+      xhttp.open("GET", "/temperature", true);
+      xhttp.send();
+    }, 10000);
   </script>
 </body>
 

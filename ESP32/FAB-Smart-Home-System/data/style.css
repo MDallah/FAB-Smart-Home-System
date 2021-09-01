@@ -1,9 +1,9 @@
 html {
+  background-color: #1f1f1f;
   font-family: monospace;
   display: inline-block;
-  margin: 0px auto;
   text-align: center;
-  background-color: #1f1f1f;
+  margin: 0px auto;
 }
 
 body {
@@ -11,26 +11,26 @@ body {
 }
 
 h1 {
-  color: #000000;
   margin: 50px auto 30px;
+  color: #000000;
 }
 
 h3 {
-  color: #ffffff;
   margin-bottom: 50px;
+  color: #ffffff;
 }
 
 .grid-container {
-  display: grid;
   grid-template-columns: 20rem 20rem 20rem 20rem;
-  grid-template-rows: 15% 10% 15%;
-  grid-gap: 0.3rem;
+  /*grid-template-rows: 15% 10% 15%;*/
   background-color: #072238;
+  grid-gap: 0.3rem;
   padding: 0.6rem;
+  font-size: 30px;
+  display: grid;
   margin: auto;
   width: 81rem;
   height: auto;
-  font-size: 30px;
 }
 
 .room {
@@ -41,94 +41,63 @@ h3 {
 }
 
 .header {
-  grid-column: 1 / 5;
-  display: grid;
   grid-template-columns: 20rem 20rem 20rem 20rem;
+  grid-column: 1 / 5;
   text-align: center;
   padding: 20px 0;
   font-size: 20px;
+  display: grid;
 }
 
 .header-room {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.meetingraum {
-  grid-row: 2 / 4;
+.meeting-room {
   background-color: rgba(255, 255, 255, 0.3);
   text-align: center;
+  grid-row: 2 / 4;
   padding: 5rem 0;
 }
 
 .corridor {
-  grid-column: 2 / 5;
-  display: grid;
-  grid-template-columns: 20rem 20rem 20rem;
-  padding: 20px 0;
-  text-align: center;
   background-color: rgba(255, 255, 255, 0.2);
+  grid-template-columns: 20rem 20rem 20rem;
+  grid-column: 2 / 5;
+  text-align: center;
+  padding: 20px 0;
+  display: grid;
 }
 
 .corridor-room {
+  padding: auto;
 }
 
 .circleBtn {
-  display: block;
+  text-decoration: none;
+  border-radius: 5rem;
   text-align: center;
+  padding: 1rem 1rem;
+  margin: 2rem auto;
+  line-height: 1rem;
+  cursor: pointer;
+  font-size: 15px;
+  display: block;
   color: white;
   border: none;
-  border-radius: 5rem;
-  padding: 1rem 1rem;
-  width: 1rem;
   height: 1rem;
-  margin: auto auto;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 15px;
-  line-height: 1rem;
+  width: 1rem;
 }
 
-.button-on {
+.on {
   background-color: #0fb641;
 }
 
-.button-on:active {
-  background-color: #2980b9;
-}
-
-.button-off {
+.off {
   background-color: #34495e;
-}
-
-.button-off:active {
-  background-color: #2c3e50;
 }
 
 .logo {
   padding: 4rem 3rem;
   width: 15rem;
-}
-
-.temp {
-  display: inline-block;
-  background-color: #f44335;
-  border: none;
-  border-radius: 0.3rem;
-  margin: 1rem;
-  width: 6rem;
-}
-.button {
-  display: inline-block;
-  background-color: #008cba;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  padding: 16px 40px;
-  text-decoration: none;
-  font-size: 30px;
-  margin: 2px;
-  cursor: pointer;
-}
-.OFF {
-  background-color: #f44336;
 }

@@ -5,7 +5,12 @@
 #include "DHT.h"
 #include "ESP32_MailClient.h"
 
+// Set connection type "Wifi" or "softAP"
+// Soft Access Point just to test.
+// Internet connection is needed to get time and send Email.
+
 String conMode = "Wifi";
+//String conMode = "softAP";
 
 // WiFi SSID & Password
 const char *ssid = "FAB-Smart-Home";
@@ -17,9 +22,11 @@ IPAddress local_ip(192, 168, 1, 1);
 // Gateway IP address to SoftAP
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
+
+
 // WiFi SSID & Password
-const char *wifiSsid = "DRAGON";
-const char *wifiPass = "P48palaestina";
+const char *wifiSsid = "P48";
+const char *wifiPass = "11223344556677889900";
 // TODO: Add host name by Wifi access.
 
 // Set GPIO
