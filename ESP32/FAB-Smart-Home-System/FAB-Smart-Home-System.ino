@@ -4,6 +4,7 @@
 #include "SPIFFS.h"
 #include "DHT.h"
 #include "ESP32_MailClient.h"
+#include "time.h"
 
 // Set connection type "Wifi" or "softAP"
 // Soft Access Point just to test.
@@ -29,8 +30,14 @@ const char *wifiSsid = "P48";
 const char *wifiPass = "11223344556677889900";
 // TODO: Add host name by Wifi access.
 
+const char *ntpServer = "pool.ntp.org"; // Network Time Protocol Server (NTP-Server)
+const long gmtOffset_sec = 3600;        // GMT +1 = 3600
+const int daylightOffset_sec = 3600;    // Difference between standard time and daylight saving time(summer time)
+struct tm timeinfo;
+char Hour[3];
+
 // Set GPIO
-#define DHTPIN 33 // musst be a input digital pin
+#define DHTPIN 33 // must be a input digital pin
 #define MR1PIN 25
 #define MR2PIN 32
 #define KPIN 26
@@ -55,13 +62,13 @@ float temperature = 0.0;
 
 // To send Email using Gmail use port 465 (SSL) and SMTP Server smtp.gmail.com
 // YOU MUST ENABLE less secure app option https://myaccount.google.com/lesssecureapps?pli=1
-#define emailSenderAccount ""
-#define emailSenderPassword ""
+#define emailSenderAccount "testmd093@gmail.com"
+#define emailSenderPassword "mdtest123"
 #define smtpServer "smtp.gmail.com"
 #define smtpServerPort 465
 #define emailSubject "[ALERT] Server Room Temperature"
 // Default Recipient Email Address
-String Recipient = "";
+String Recipient = "testmd093@gmail.com";
 // Default Threshold Temperature Value
 String emailMessage;
 bool emailSent = false;
@@ -241,7 +248,7 @@ String processor(const String &var)
     Serial.println("----------------------");
     return dgState;
   }
-  if (var == "TEMPERATURE")
+  if (var == "TEMP")
   {
     Serial.println(temperature);
     Serial.println("----------------------");
@@ -290,6 +297,13 @@ void setup()
   }
   delay(100);
 
+  // Init and save the time in Esp32
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+  // getLocalTime();
+  //  //disconnect WiFi as it's no longer needed
+  //  WiFi.disconnect(true);
+  //  WiFi.mode(WIFI_OFF);
+
   dht.begin();
   setupServer();
 }
@@ -332,168 +346,178 @@ void waitForWiFiConnectOrReboot(bool printOnSerial)
 void setupServer()
 {
   // Route for root / web page
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/index.html", String(), false, processor); });
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
 
   // Route to load style.css file
-  server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/style.css", "text/css"); });
+  server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    request->send(SPIFFS, "/style.css", "text/css");
+  });
 
   // Route to load FABMationLogo.png file
-  server.on("/FABMationLogo.png", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/FABMationLogo.png", "image/png"); });
+  server.on("/FABMationLogo.png", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    request->send(SPIFFS, "/FABMationLogo.png", "image/png");
+  });
 
   // Route to load SmartHome.png file
-  server.on("/SmartHome.png", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/SmartHome.png", "image/png"); });
+  server.on("/SmartHome.png", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    request->send(SPIFFS, "/SmartHome.png", "image/png");
+  });
 
   // Route to load temperature
-  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send_P(200, "text/plain", readTemperature().c_str()); });
+  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    request->send_P(200, "text/plain", readTemperature().c_str());
+  });
 
   // Route to change GPIO status
-  server.on("/mr1", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-              if (digitalRead(MR1PIN))
-              {
-                digitalWrite(MR1PIN, LOW);
-              }
-              else
-              {
-                digitalWrite(MR1PIN, HIGH);
-              }
-              request->send(SPIFFS, "/index.html", String(), false, processor);
-            });
+  server.on("/mr1", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    if (digitalRead(MR1PIN))
+    {
+      digitalWrite(MR1PIN, LOW);
+    }
+    else
+    {
+      digitalWrite(MR1PIN, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
 
-  server.on("/mr2", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-              if (digitalRead(MR2PIN))
-              {
-                digitalWrite(MR2PIN, LOW);
-              }
-              else
-              {
-                digitalWrite(MR2PIN, HIGH);
-              }
-              request->send(SPIFFS, "/index.html", String(), false, processor);
-            });
+  server.on("/mr2", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    if (digitalRead(MR2PIN))
+    {
+      digitalWrite(MR2PIN, LOW);
+    }
+    else
+    {
+      digitalWrite(MR2PIN, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
 
-  server.on("/k", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-              if (digitalRead(KPIN))
-              {
-                digitalWrite(KPIN, LOW);
-              }
-              else
-              {
-                digitalWrite(KPIN, HIGH);
-              }
-              request->send(SPIFFS, "/index.html", String(), false, processor);
-            });
+  server.on("/k", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    if (digitalRead(KPIN))
+    {
+      digitalWrite(KPIN, LOW);
+    }
+    else
+    {
+      digitalWrite(KPIN, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
 
-  server.on("/sk", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-              if (digitalRead(SKPIN))
-              {
-                digitalWrite(SKPIN, LOW);
-              }
-              else
-              {
-                digitalWrite(SKPIN, HIGH);
-              }
-              request->send(SPIFFS, "/index.html", String(), false, processor);
-            });
+  server.on("/sk", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    if (digitalRead(SKPIN))
+    {
+      digitalWrite(SKPIN, LOW);
+    }
+    else
+    {
+      digitalWrite(SKPIN, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
 
-  server.on("/a", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-              if (digitalRead(APIN))
-              {
-                digitalWrite(APIN, LOW);
-              }
-              else
-              {
-                digitalWrite(APIN, HIGH);
-              }
-              request->send(SPIFFS, "/index.html", String(), false, processor);
-            });
+  server.on("/a", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    if (digitalRead(APIN))
+    {
+      digitalWrite(APIN, LOW);
+    }
+    else
+    {
+      digitalWrite(APIN, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
 
-  server.on("/c1", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-              if (digitalRead(C1PIN))
-              {
-                digitalWrite(C1PIN, LOW);
-              }
-              else
-              {
-                digitalWrite(C1PIN, HIGH);
-              }
-              request->send(SPIFFS, "/index.html", String(), false, processor);
-            });
+  server.on("/c1", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    if (digitalRead(C1PIN))
+    {
+      digitalWrite(C1PIN, LOW);
+    }
+    else
+    {
+      digitalWrite(C1PIN, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
 
-  server.on("/c2", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-              if (digitalRead(C2PIN))
-              {
-                digitalWrite(C2PIN, LOW);
-              }
-              else
-              {
-                digitalWrite(C2PIN, HIGH);
-              }
-              request->send(SPIFFS, "/index.html", String(), false, processor);
-            });
+  server.on("/c2", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    if (digitalRead(C2PIN))
+    {
+      digitalWrite(C2PIN, LOW);
+    }
+    else
+    {
+      digitalWrite(C2PIN, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
 
-  server.on("/s", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-              if (digitalRead(SPIN))
-              {
-                digitalWrite(SPIN, LOW);
-              }
-              else
-              {
-                digitalWrite(SPIN, HIGH);
-              }
-              request->send(SPIFFS, "/index.html", String(), false, processor);
-            });
+  server.on("/s", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    if (digitalRead(SPIN))
+    {
+      digitalWrite(SPIN, LOW);
+    }
+    else
+    {
+      digitalWrite(SPIN, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
 
-  server.on("/d1", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-              if (digitalRead(D1PIN))
-              {
-                digitalWrite(D1PIN, LOW);
-              }
-              else
-              {
-                digitalWrite(D1PIN, HIGH);
-              }
-              request->send(SPIFFS, "/index.html", String(), false, processor);
-            });
+  server.on("/d1", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    if (digitalRead(D1PIN))
+    {
+      digitalWrite(D1PIN, LOW);
+    }
+    else
+    {
+      digitalWrite(D1PIN, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
 
-  server.on("/d2", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-              if (digitalRead(D2PIN))
-              {
-                digitalWrite(D2PIN, LOW);
-              }
-              else
-              {
-                digitalWrite(D2PIN, HIGH);
-              }
-              request->send(SPIFFS, "/index.html", String(), false, processor);
-            });
+  server.on("/d2", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    if (digitalRead(D2PIN))
+    {
+      digitalWrite(D2PIN, LOW);
+    }
+    else
+    {
+      digitalWrite(D2PIN, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
 
-  server.on("/dg", HTTP_GET, [](AsyncWebServerRequest *request)
-            {
-              if (digitalRead(DGPIN))
-              {
-                digitalWrite(DGPIN, LOW);
-              }
-              else
-              {
-                digitalWrite(DGPIN, HIGH);
-              }
-              request->send(SPIFFS, "/index.html", String(), false, processor);
-            });
+  server.on("/dg", HTTP_GET, [](AsyncWebServerRequest * request)
+  {
+    if (digitalRead(DGPIN))
+    {
+      digitalWrite(DGPIN, LOW);
+    }
+    else
+    {
+      digitalWrite(DGPIN, HIGH);
+    }
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
 
   // Start server
   server.begin();
@@ -517,9 +541,10 @@ String readTemperature()
   {
     Serial.print("Temp: ");
     Serial.println(temperature);
-    if (temperature > 30 && !emailSent)
+    if (temperature > 26 && !emailSent)
     {
       sendEmail();
+      delay(5000);
     }
     return String(temperature);
   }
@@ -544,7 +569,12 @@ bool sendEmail()
   smtpData.setSubject(emailSubject);
 
   // Set the message with HTML format
-  emailMessage = String(temperature);
+  emailMessage = "High temperature detected:";
+  emailMessage+= "\nTemperature:";
+  emailMessage+= String(temperature);
+  emailMessage+= "\nPlease check the server room as soon as you can!";
+  emailMessage+= "\nHave a nice day";
+  emailMessage+= "\nyour FAB-Smart-Home-System"; 
   smtpData.setMessage(emailMessage, true);
 
   // Add recipients
@@ -577,6 +607,36 @@ void sendCallback(SendStatus msg)
   }
 }
 
+void getLocalTime()
+{
+  if (!getLocalTime(&timeinfo))
+  {
+    Serial.println("Failed to obtain time");
+  } else {
+    Serial.println(&timeinfo, "%A, %d %B %Y %H:%M:%S");
+    //Serial.println(&timeinfo);
+  }
+}
+
 void loop()
 {
+  //******************************************
+  // TODO delay(3600000);
+  delay(1000); // 1 hour = 3600000 ms
+  //******************************************
+  getLocalTime();
+  //******************************************
+  // TODO strftime(Hour, 3, "%H", &timeinfo);
+  strftime(Hour, 3, "%S", &timeinfo);
+  //******************************************
+  Serial.print("Hour: ");
+  Serial.println(Hour);
+  if (String(Hour) == "00") {
+    // here must reset ESP32 or set emailSent to false;
+    Serial.println("Daily Reset");
+    emailSent = false;
+    ESP.restart();
+    // Serial.println("Just EmailSent bool reset");
+    // emailSent = false;
+  }
 }

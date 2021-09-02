@@ -22,4 +22,5 @@ https://techoverflow.net/2021/01/21/how-to-fix-esp32-not-connecting-to-the-wifi-
 https://randomnerdtutorials.com/esp32-dht11-dht22-temperature-humidity-sensor-arduino-ide/  // Temperature and Humidity Sensor
 https://randomnerdtutorials.com/solved-dht11-dht22-failed-to-read-from-dht-sensor/          // Resolve Failed to read (DHT sensor)
 https://randomnerdtutorials.com/esp32-pinout-reference-gpios/                               // Pinout
+https://randomnerdtutorials.com/esp32-date-time-ntp-client-server-arduino/                  // Get Time to esp32
 
