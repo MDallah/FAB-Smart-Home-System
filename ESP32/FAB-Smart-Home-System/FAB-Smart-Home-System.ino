@@ -7,13 +7,13 @@
 #include "time.h"
 #include "esp_task_wdt.h"
 
-// Set connection type "Wifi" or "softAP"
+// Set connection mode "Wifi" or "softAP"
 // Soft Access Point just to test.
 // Internet connection is needed to get time and send Email.
-String conMode = "Wifi";
 //String conMode = "softAP";
+String conMode = "Wifi";
 
-// WiFi SSID & Password
+// SoftAP SSID & Password
 const char *ssid = "FAB-Smart-Home";
 const char *password = "11223344556677889900";
 // TODO: Add host name by Wifi access.
@@ -25,15 +25,16 @@ IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 
 // WiFi SSID & Password
-const char *wifiSsid = "P48";
-const char *wifiPass = "11223344556677889900";
+const char *wifi_ssid = "P48";
+const char *wifi_pass = "11223344556677889900";
 // TODO: Add host name by Wifi access.
 
 const char *ntpServer = "pool.ntp.org"; // Network Time Protocol Server (NTP-Server)
 const long gmtOffset_sec = 3600;        // GMT +1 = 3600
 const int daylightOffset_sec = 3600;    // Difference between standard time and daylight saving time(summer time)
 struct tm timeinfo;
-char Hour[3];
+char hour[3];
+char minute[3];
 
 // Set GPIO
 #define DHTPIN 33 // must be a input digital pin
@@ -56,19 +57,16 @@ char Hour[3];
 
 // Initialize DHT sensor.
 DHT dht(DHTPIN, DHTTYPE);
-
 float temperature = 0.0;
 
-// To send Email using Gmail use port 465 (SSL) and SMTP Server smtp.gmail.com
+// Simple Mail Transfer Protocol (SMTP)
 // YOU MUST ENABLE less secure app option https://myaccount.google.com/lesssecureapps?pli=1
 #define emailSenderAccount "testmd093@gmail.com"
 #define emailSenderPassword "mdtest123"
 #define smtpServer "smtp.gmail.com"
-#define smtpServerPort 465
+#define smtpServerPort 587
 #define emailSubject "[ALERT] Server Room Temperature"
-// Default Recipient Email Address
 String Recipient = "testmd093@gmail.com";
-// Default Threshold Temperature Value
 String emailMessage;
 bool emailSent = false;
 // The Email Sending data object contains config and data to send
@@ -125,16 +123,16 @@ void setup()
   else if (conMode == "Wifi")
   {
     // Connect to Wi-Fi & print IP
-    WiFi.begin(wifiSsid, wifiPass);
+    WiFi.begin(wifi_ssid, wifi_pass);
     waitForWiFiConnectOrReboot(true);
   }
 
   // Init and save the time in Esp32
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   // getLocalTime();
-  //  //disconnect WiFi as it's no longer needed
-  //  WiFi.disconnect(true);
-  //  WiFi.mode(WIFI_OFF);
+  // //disconnect WiFi as it's no longer needed
+  // WiFi.disconnect(true);
+  // WiFi.mode(WIFI_OFF);
 
   dht.begin();
   setupServer();
@@ -142,24 +140,23 @@ void setup()
 
 void loop()
 {
-  //******************************************
-  // TODO delay(3600000);
-  delay(1000); // 1 hour = 3600000 ms
-  //******************************************
   getLocalTime();
-  //******************************************
-  // TODO strftime(Hour, 3, "%H", &timeinfo);
-  strftime(Hour, 3, "%S", &timeinfo);
-  //******************************************
-  //Serial.print("Hour: ");
-  //Serial.println(Hour);
-  if (String(Hour) == "00")
+  readTemperature();
+  
+  strftime(hour, 3, "%H", &timeinfo);
+  strftime(minute, 3, "%M", &timeinfo);
+  // Serial.println(minute);
+  
+  if (String(minute) == "00" || String(minute) == "30")
   {
-    // here must reset ESP32 or set emailSent to false;
-    Serial.println("Daily Reset");
     emailSent = false;
-    ESP.restart();
-    // Serial.println("Just EmailSent bool reset");
-    // emailSent = false;
   }
+  
+  if (String(hour) == "00" && String(minute) == "00")
+  {
+    Serial.println("Daily Reset");
+    ESP.restart();
+  }
+
+  delay(60000); // 1 min = 60000 ms
 }

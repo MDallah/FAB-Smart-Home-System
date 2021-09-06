@@ -7,6 +7,6 @@ void getLocalTime()
   else
   {
     //Serial.println(&timeinfo, "%A, %d %B %Y %H:%M:%S");
-    //Serial.println(&timeinfo);
+    Serial.println(&timeinfo);
   }
 }

@@ -26,7 +26,6 @@ String processor(const String &var)
       mr2State = "0";
     }
     Serial.println(mr2State);
-    Serial.println("----------------------");
     return mr2State;
   }
   if (var == "K")
@@ -40,7 +39,6 @@ String processor(const String &var)
       kState = "0";
     }
     Serial.println(kState);
-    Serial.println("----------------------");
     return kState;
   }
   if (var == "SK")
@@ -54,7 +52,6 @@ String processor(const String &var)
       skState = "0";
     }
     Serial.println(skState);
-    Serial.println("----------------------");
     return skState;
   }
   if (var == "A")
@@ -68,7 +65,6 @@ String processor(const String &var)
       aState = "0";
     }
     Serial.println(aState);
-    Serial.println("----------------------");
     return aState;
   }
   if (var == "C1")
@@ -82,7 +78,6 @@ String processor(const String &var)
       c1State = "0";
     }
     Serial.println(c1State);
-    Serial.println("----------------------");
     return c1State;
   }
   if (var == "C2")
@@ -96,7 +91,6 @@ String processor(const String &var)
       c2State = "0";
     }
     Serial.println(c2State);
-    Serial.println("----------------------");
     return c2State;
   }
   if (var == "S")
@@ -110,7 +104,6 @@ String processor(const String &var)
       sState = "0";
     }
     Serial.println(sState);
-    Serial.println("----------------------");
     return sState;
   }
   if (var == "D1")
@@ -124,7 +117,6 @@ String processor(const String &var)
       d1State = "0";
     }
     Serial.println(d1State);
-    Serial.println("----------------------");
     return d1State;
   }
   if (var == "D2")
@@ -138,7 +130,6 @@ String processor(const String &var)
       d2State = "0";
     }
     Serial.println(d2State);
-    Serial.println("----------------------");
     return d2State;
   }
   if (var == "DG")
@@ -152,13 +143,11 @@ String processor(const String &var)
       dgState = "0";
     }
     Serial.println(dgState);
-    Serial.println("----------------------");
     return dgState;
   }
   if (var == "TEMP")
   {
     Serial.println(temperature);
-    Serial.println("----------------------");
     return readTemperature();
   }
   return String();

@@ -13,7 +13,7 @@ String readTemperature()
   }
   else
   {
-    Serial.print("Temp: ");
+    Serial.print("Temperature: ");
     Serial.println(temperature);
     // The ideal Server room temperature is between 18 °C und 24 °C
     // Dangerous operating temperatures will be anything over 30°C
