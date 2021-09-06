@@ -1,3 +1,14 @@
+/*
+  Rui Santos
+  Complete project details at https://randomnerdtutorials.com/projects-esp32/
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files.
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+*/
+
 // Import required libraries
 #include "WiFi.h"
 #include "ESPAsyncWebServer.h"
@@ -140,23 +151,30 @@ void setup()
 
 void loop()
 {
-  getLocalTime();
-  readTemperature();
-  
-  strftime(hour, 3, "%H", &timeinfo);
-  strftime(minute, 3, "%M", &timeinfo);
-  // Serial.println(minute);
-  
-  if (String(minute) == "00" || String(minute) == "30")
+  if (WiFi.status() != WL_CONNECTED)
   {
-    emailSent = false;
+    waitForWiFiConnectOrReboot(true);
   }
-  
-  if (String(hour) == "00" && String(minute) == "00")
+  else
   {
-    Serial.println("Daily Reset");
-    ESP.restart();
-  }
+    getLocalTime();
+    readTemperature();
 
-  delay(60000); // 1 min = 60000 ms
+    strftime(hour, 3, "%H", &timeinfo);
+    strftime(minute, 3, "%M", &timeinfo);
+    // Serial.println(minute);
+
+    if (String(minute) == "00" || String(minute) == "30")
+    {
+      emailSent = false;
+    }
+
+    if (String(hour) == "00" && String(minute) == "00")
+    {
+      Serial.println("Daily Reset");
+      ESP.restart();
+    }
+
+    delay(60000); // 1 min = 60000 ms
+  }
 }
