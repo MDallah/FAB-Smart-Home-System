@@ -148,7 +148,7 @@ String processor(const String &var)
   if (var == "TEMP")
   {
     Serial.println(temperature);
-    return readTemperature();
+    return getTemperature();
   }
   return String();
 }

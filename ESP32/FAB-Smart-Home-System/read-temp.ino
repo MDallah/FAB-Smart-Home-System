@@ -1,3 +1,4 @@
+// Read DHT11 sensor
 String readTemperature()
 {
   // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
@@ -13,7 +14,7 @@ String readTemperature()
   }
   else
   {
-    Serial.print("Temperature: ");
+    Serial.print("Temp Sensor: ");
     Serial.println(temperature);
     // The ideal Server room temperature is between 18 °C und 24 °C
     // Dangerous operating temperatures will be anything over 30°C
@@ -26,5 +27,18 @@ String readTemperature()
       sendEmail();
     }
     return String(temperature);
+  }
+}
+
+// Get stored temperature value
+String getTemperature()
+{
+  if (temperature>0)
+  {
+   return String(temperature);
+  }
+  else
+  {
+    return "--";
   }
 }

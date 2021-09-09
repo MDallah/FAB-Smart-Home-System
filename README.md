@@ -23,4 +23,4 @@ https://randomnerdtutorials.com/esp32-dht11-dht22-temperature-humidity-sensor-ar
 https://randomnerdtutorials.com/solved-dht11-dht22-failed-to-read-from-dht-sensor/          // Resolve Failed to read (DHT sensor)
 https://randomnerdtutorials.com/esp32-pinout-reference-gpios/                               // Pinout
 https://randomnerdtutorials.com/esp32-date-time-ntp-client-server-arduino/                  // Get Time to esp32
-
+https://www.w3schools.com

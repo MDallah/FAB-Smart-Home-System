@@ -18,7 +18,7 @@ void setupServer()
 
   // Route to load temperature
   server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send_P(200, "text/plain", readTemperature().c_str()); });
+            { request->send_P(200, "text/plain", getTemperature().c_str()); });
 
   // Route to change GPIO status
   server.on("/mr1", HTTP_GET, [](AsyncWebServerRequest *request)

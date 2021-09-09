@@ -76,6 +76,7 @@ float temperature = 0.0;
 #define emailSenderPassword "mdtest123"
 #define smtpServer "smtp.gmail.com"
 #define smtpServerPort 587
+//#define smtpServerPort 465
 #define emailSubject "[ALERT] Server Room Temperature"
 String Recipient = "testmd093@gmail.com";
 String emailMessage;
