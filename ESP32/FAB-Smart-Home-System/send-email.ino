@@ -17,12 +17,7 @@ bool sendEmail()
   smtpData.setSubject(emailSubject);
 
   // Set the message with HTML format
-  emailMessage = "High temperature detected:";
-  emailMessage += "\nTemperature:";
-  emailMessage += String(temperature);
-  emailMessage += "\nPlease check the server room as soon as you can!";
-  emailMessage += "\nHave a nice day";
-  emailMessage += "\nyour FAB-Smart-Home-System";
+  sprintf(emailMessage, "<h2>High temperature detected:</h2><br/><p><b>Temperature (°C): <font color='red'>%.2f</font></b></p><br/><p><b>Please check the server room as soon as you can!</b></p><br/><p><b>Have a nice day</p></b><p><b>Your FAB-Smart-Home-System</b></p>", temperature);
   smtpData.setMessage(emailMessage, true);
 
   // Add recipients

@@ -79,7 +79,7 @@ float temperature = 0.0;
 //#define smtpServerPort 465
 #define emailSubject "[ALERT] Server Room Temperature"
 String Recipient = "testmd093@gmail.com";
-String emailMessage;
+char emailMessage[2048];
 bool emailSent = false;
 // The Email Sending data object contains config and data to send
 SMTPData smtpData;
