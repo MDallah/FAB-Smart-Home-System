@@ -13,79 +13,175 @@
 </head>
 
 <body>
+  <div class="tab">
+    <button id="defaultOpen" class="tablinks" onclick="openCity(event, 'Home')">Home</button>
+    <button class="tablinks" onclick="openCity(event, 'Setting')">Setting</button>
+    <button class="tablinks">All OFF</button>
+  </div>
 
-  <!-- Header -->
+  <div id="Home" class="tabcontent">
+    <!-- Header -->
 
-  <div class="grid-container">
-    <div class="header header-room">
-      <img class="logo" src="FABMationLogo.png">
-      <div>
-        <p>FABMation GmbH</p>
-        <p>Garten Str. 36</p>
-        <p>89231 Neu-Ulm</p>
+    <div class="grid-container">
+      <div class="header header-room">
+        <img class="logo" src="FABMationLogo.png">
+        <div>
+          <p>FABMation GmbH</p>
+          <p>Garten Str. 36</p>
+          <p>89231 Neu-Ulm</p>
+        </div>
+        <div>
+          <p>Mohammad Dallah</p>
+          <p>E3FI1</p>
+          <p>RBS ULM</p>
+        </div>
+        <div>
+          <p>Smart Home System &#x21BB;</p>
+          <p>ESP32 Web Server</p>
+          <p>2022</p>
+        </div>
       </div>
-      <div>
-        <p>Mohammad Dallah</p>
-        <p>E3FI1</p>
-        <p>RBS ULM</p>
+
+      <!-- Rooms -->
+
+      <div class="meeting-room">
+        <a id="mr1" class="circleBtn on" href="/mr1">%MR1%</a>
+        <p>Meeting room</p>
+        <a id="mr2" class="circleBtn on" href="/mr2">%MR2%</a>
       </div>
-      <div>
-        <p>Smart Home System &#x21BB;</p>
-        <p>ESP32 Web Server</p>
-        <p>2022</p>
+      <div class="room">
+        <p>Kitchen</p><a id="k" class="circleBtn on" href="/k">%K%</a>
+      </div>
+      <div class="room">
+        <p>Secretariat</p><a id="sk" class="circleBtn on" href="/sk">%SK%</a>
+      </div>
+      <div class="room">
+        <p>Administration</p><a id="a" class="circleBtn on" href="/a">%A%</a>
+      </div>
+
+      <!-- Corridor -->
+
+      <div class="corridor">
+        <div class="corridor-room"><a id="c1" class="circleBtn on" href="/c1">%C1%</a></div>
+        <div class="corridor-room">
+          <p class="corridor-room">Corridor</p>
+        </div>
+        <div class="corridor-room"><a id="c2" class="circleBtn on" href="/c2">%C2%</a></div>
+      </div>
+
+      <!-- Rooms -->
+
+      <div class="room">
+        <p>Server room</p>
+        <a id="s" class="circleBtn on" href="/s">%S%</a>
+        <p>
+          <i class="fas fa-thermometer-half" style="color:#000000c9;"></i>
+          <span id="temperature"> %TEMP%</span>
+          <sup class="units">&deg;C</sup>
+        </p>
+      </div>
+      <div class="room">
+        <p>Developer R1</p><a id="d1" class="circleBtn on" href="/d1">%D1%</a>
+      </div>
+      <div class="room">
+        <p>Developer R2</p><a id="d2" class="circleBtn on" href="/d2">%D2%</a>
+      </div>
+      <div class="room">
+        <p>Designer</p><a id="dg" class="circleBtn on" href="/dg">%DG%</a>
       </div>
     </div>
+  </div>
 
-    <!-- Rooms -->
+  <div id="Setting" class="tabcontent">
+    <div class="container">
+      <div class="header-room">
 
-    <div class="meeting-room">
-      <a id="mr1" class="circleBtn on" href="/mr1">%MR1%</a>
-      <p>Meeting room</p>
-      <a id="mr2" class="circleBtn on" href="/mr2">%MR2%</a>
-    </div>
-    <div class="room">
-      <p>Kitchen</p><a id="k" class="circleBtn on" href="/k">%K%</a>
-    </div>
-    <div class="room">
-      <p>Secretariat</p><a id="sk" class="circleBtn on" href="/sk">%SK%</a>
-    </div>
-    <div class="room">
-      <p>Administration</p><a id="a" class="circleBtn on" href="/a">%A%</a>
-    </div>
 
-    <!-- Corridor -->
+        <div class="group">
+          <input id="wifi-ssid" type="text" required>
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>WiFi-SSID:</label>
+        </div>
 
-    <div class="corridor">
-      <div class="corridor-room"><a id="c1" class="circleBtn on" href="/c1">%C1%</a></div>
-      <div class="corridor-room">
-        <p class="corridor-room">Corridor</p>
+        <div class="group">
+          <input id="wifi-password" type="password" required>
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>WiFi-Password:</label>
+        </div>
+
+        <div class="group" style="margin-bottom: 0rem;">
+          <input id="email-sender" type="text" required>
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>Email-Sender:</label>
+        </div>
+
+        <div style="margin-top: 0px; margin-left: 22rem; text-align:left">
+          <a style="color: silver; font-size: 1rem;" href="https://myaccount.google.com/lesssecureapps?pli=1">
+            <b>Less Secure App Access Must Be Enabled!</b>
+          </a>
+        </div>
+
+        <div class="group">
+          <input id="email-sender-password" type="password" required>
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>Email-Sender-Password:</label>
+        </div>
+
+        <div class="group">
+          <input id="email-recipient" type="text" required>
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>Email-Recipient:</label>
+        </div>
+
+        <div class="group">
+          <input id="send-email-every-min" type="text" required>
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>Send-Email-Every-(min.):</label>
+        </div>
+
+        <div class="group">
+          <input id="gmt-offset" type="text" required>
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>GMT-Offset-(min.):</label>
+        </div>
+
+        <div class="group">
+          <input id="daylight-offset" type="text" required>
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>Daylight-Offset-(min.):</label>
+        </div>
+
+        <button class="button" onclick="create_JSON()"><b>Save&nbsp;&&nbsp;Reset</b></button>
+
       </div>
-      <div class="corridor-room"><a id="c2" class="circleBtn on" href="/c2">%C2%</a></div>
-    </div>
-
-    <!-- Rooms -->
-
-    <div class="room">
-      <p>Server room</p>
-      <a id="s" class="circleBtn on" href="/s">%S%</a>
-      <p>
-        <i class="fas fa-thermometer-half" style="color:#000000c9;"></i>
-        <span id="temperature"> %TEMP%</span>
-        <sup class="units">&deg;C</sup>
-      </p>
-    </div>
-    <div class="room">
-      <p>Developer R1</p><a id="d1" class="circleBtn on" href="/d1">%D1%</a>
-    </div>
-    <div class="room">
-      <p>Developer R2</p><a id="d2" class="circleBtn on" href="/d2">%D2%</a>
-    </div>
-    <div class="room">
-      <p>Designer</p><a id="dg" class="circleBtn on" href="/dg">%DG%</a>
     </div>
   </div>
 
   <script>
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+    function openCity(evt, pageName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(pageName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+
     if (document.getElementById("mr1").innerText == 0) {
       document.getElementById("mr1").className += " off";
     }
@@ -133,6 +229,30 @@
       xhttp.open("GET", "/temperature", true);
       xhttp.send();
     }, 10000);
+
+    function create_JSON() {
+      post_JSON(JSON.stringify(
+        {
+          "wifi_ssid": document.getElementById("wifi-ssid").value,
+          "wifi_password": document.getElementById("wifi-password").value,
+          "email_sender": document.getElementById("email-sender").value,
+          "email_sender_password": document.getElementById("email-sender-password").value,
+          "email_recipient": document.getElementById("email-recipient").value,
+          "time_to_send_email": document.getElementById("send-email-every-min").value,
+          "gmt_offset_sec": document.getElementById("gmt-offset").value,
+          "daylight_offset_sec": document.getElementById("daylight-offset").value
+        }
+      ));
+    }
+
+    function post_JSON(data) {
+      var http = new XMLHttpRequest();
+      http.open('POST', "/settings");
+
+      //Send the proper header information along with the request
+      http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      http.send(data);
+    }
   </script>
 </body>
 

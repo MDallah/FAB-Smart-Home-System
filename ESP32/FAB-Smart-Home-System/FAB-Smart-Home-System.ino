@@ -1,10 +1,10 @@
 /*
   Rui Santos
   Complete project details at https://randomnerdtutorials.com/projects-esp32/
-  
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files.
-  
+
   The above copyright notice and this permission notice shall be included in all
   copies or substantial portions of the Software.
 */
@@ -17,6 +17,25 @@
 #include "ESP32_MailClient.h"
 #include "time.h"
 #include "esp_task_wdt.h"
+#include "ArduinoJson.h"
+
+// Add configuration structure.
+struct Config
+{
+  char WiFi_ssid[64];
+  char WiFi_password[64];
+  char Email_sender[64];
+  char Email_sender_password[64];
+  char Email_recipient[64];
+  int Time_to_send_email;
+  int GMT_offset_sec;
+  int Daylight_offset_sec;
+};
+
+String received_json;
+const char *configFile = "/config.json";
+Config config;
+Config temporary_config;
 
 // Set connection mode "Wifi" or "softAP"
 // Soft Access Point just to test.
@@ -36,13 +55,15 @@ IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 
 // WiFi SSID & Password
-const char *wifi_ssid = "P48";
-const char *wifi_pass = "11223344556677889900";
+// const char *wifi_ssid = "P48";
+// const char *wifi_pass = "11223344556677889900";
+const char *wifi_ssid = config.WiFi_ssid;
+const char *wifi_pass = config.WiFi_password;
 // TODO: Add host name by Wifi access.
 
 const char *ntpServer = "pool.ntp.org"; // Network Time Protocol Server (NTP-Server)
-const long gmtOffset_sec = 3600;        // GMT +1 = 3600
-const int daylightOffset_sec = 3600;    // Difference between standard time and daylight saving time(summer time)
+const long gmtOffset_sec = config.GMT_offset_sec ;        //const long gmtOffset_sec = 3600;        // GMT +1 = 3600
+const int daylightOffset_sec = config.Daylight_offset_sec ;    //const int daylightOffset_sec = 3600;    // Difference between standard time and daylight saving time(summer time)
 struct tm timeinfo;
 char hour[3];
 char minute[3];
@@ -72,13 +93,14 @@ float temperature = 0.0;
 
 // Simple Mail Transfer Protocol (SMTP)
 // YOU MUST ENABLE less secure app option https://myaccount.google.com/lesssecureapps?pli=1
-#define emailSenderAccount "testmd093@gmail.com"
-#define emailSenderPassword "mdtest123"
+#define emailSenderAccount config.Email_sender  // #define emailSenderAccount "testmd093@gmail.com"
+#define emailSenderPassword config.Email_sender_password  // #define emailSenderPassword "mdtest123"
+#define Recipient config.Email_recipient  // #define Recipient "testmd093@gmail.com"
+#define time_to_send_mail config.Time_to_send_email  // #define time_to_send_mail 30
 #define smtpServer "smtp.gmail.com"
 #define smtpServerPort 587
 //#define smtpServerPort 465
 #define emailSubject "[ALERT] Server Room Temperature"
-String Recipient = "testmd093@gmail.com";
 char emailMessage[2048];
 bool emailSent = false;
 // The Email Sending data object contains config and data to send
@@ -124,6 +146,10 @@ void setup()
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
   }
+
+  // Should load default config if run for the first time
+  Serial.println(F("Loading configuration..."));
+  loadConfig(config);
 
   if (conMode == "softAP")
   {

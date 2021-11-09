@@ -164,6 +164,30 @@ void setupServer()
               request->send(SPIFFS, "/index.html", String(), false, processor);
             });
 
+  server.on(
+      "/settings", HTTP_POST, [](AsyncWebServerRequest *request) {},
+      NULL,
+      [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)
+      {
+        // for (size_t i = 0; i < len; i++)
+        // {
+        //   Serial.write(data[i]);
+        // }
+        received_json = (char *)data;
+        Serial.println();
+        Serial.println("received_json: ");
+        Serial.println(received_json);
+
+        // Create configuration file
+        Serial.println(F("Saving configuration..."));
+        //saveConfig(configFile, config);
+        saveJsonConfig(received_json);
+        
+        //request->send(200);
+        request->send(200, "text/plain", "The setting has been changed!\nFAB-Smart-Home-System will be rebooted!");
+        ESP.restart();
+      });
+
   // Start server
   server.begin();
   Serial.println("HTTP server started");
