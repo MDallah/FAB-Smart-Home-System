@@ -6,7 +6,7 @@ html {
 }
 
 body {
-  margin-top: 1rem;
+  margin-top: 0.2rem;
 }
 
 h1 {
@@ -161,7 +161,7 @@ h3 {
 .group {
   position: relative;
   margin-bottom: 45px;
-  margin: 2rem 22rem;
+  margin: 3rem 22rem;
 }
 
 .button {
@@ -268,4 +268,66 @@ input:focus ~ .highlight {
     width: 0;
     background: transparent;
   }
+}
+
+/* form starting stylings ------------------------------- */
+.radiobtn {
+  background-color: rgba(255, 255, 255, 0.3);
+  position: relative;
+  margin-bottom: 45px;
+  margin: 2rem 27.1rem 2rem 22rem;
+  font-size: 18px;
+}
+
+.inputx {
+  background-color: rgba(255, 255, 255, 0.3);
+  font-size: 18px;
+
+  left: 5px;
+  display: unset;
+  width: 50px;
+  border: none;
+  border-bottom: 1px solid #757575;
+}
+
+/* ################################################ */
+.scroll {
+  overflow: auto;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgb(53, 53, 53);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #757575;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.all_off_btn {
+  position: relative;
+  right: -61rem;
+  background-color: inherit;
+  float: left;
+  outline: none;
+  transition: 0.3s;
+  text-decoration: none;
+  border-radius: 5rem;
+  text-align: center;
+  padding: 1.5rem 1.5rem 0.5rem;
+  line-height: 1rem;
+  cursor: pointer;
+  font-size: 15px;
+  display: block;
+  color: rgb(124, 124, 124);
 }

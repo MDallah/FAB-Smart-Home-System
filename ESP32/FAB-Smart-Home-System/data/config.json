@@ -1,10 +1,12 @@
 {
   "wifi_ssid": "P48",
   "wifi_password": "11223344556677889900",
+  "wifi_mode": false,
   "email_sender": "testmd093@gmail.com",
   "email_sender_password": "mdtest123",
   "email_recipient": "testmd093@gmail.com",
   "time_to_send_email": 30,
+  "time_server": "192.168.0.6",
   "gmt_offset_sec": 3600,
   "daylight_offset_sec": 3600
 }

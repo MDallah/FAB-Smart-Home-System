@@ -24,10 +24,12 @@ struct Config
 {
   char WiFi_ssid[64];
   char WiFi_password[64];
+  bool WiFi_Mode;
   char Email_sender[64];
   char Email_sender_password[64];
   char Email_recipient[64];
   int Time_to_send_email;
+  char Time_server[64];
   int GMT_offset_sec;
   int Daylight_offset_sec;
 };
@@ -40,8 +42,6 @@ Config temporary_config;
 // Set connection mode "Wifi" or "softAP"
 // Soft Access Point just to test.
 // Internet connection is needed to get time and send Email.
-//String conMode = "softAP";
-String conMode = "Wifi";
 
 // SoftAP SSID & Password
 const char *ssid = "FAB-Smart-Home";
@@ -61,7 +61,8 @@ const char *wifi_ssid = config.WiFi_ssid;
 const char *wifi_pass = config.WiFi_password;
 // TODO: Add host name by Wifi access.
 
-const char *ntpServer = "pool.ntp.org"; // Network Time Protocol Server (NTP-Server)
+
+const char *TimeServer = config.Time_server;
 const long gmtOffset_sec = config.GMT_offset_sec ;        //const long gmtOffset_sec = 3600;        // GMT +1 = 3600
 const int daylightOffset_sec = config.Daylight_offset_sec ;    //const int daylightOffset_sec = 3600;    // Difference between standard time and daylight saving time(summer time)
 struct tm timeinfo;
@@ -70,17 +71,17 @@ char minute[3];
 
 // Set GPIO
 #define DHTPIN 33 // must be a input digital pin
-#define MR1PIN 25
-#define MR2PIN 32
-#define KPIN 26
-#define SKPIN 26
-#define APIN 26
-#define C1PIN 26
+#define MR1PIN 19
+#define MR2PIN 25
+#define KPIN 16
+#define SKPIN 18
+#define APIN 17
+#define C1PIN 32
 #define C2PIN 26
-#define SPIN 26
-#define D1PIN 26
-#define D2PIN 26
-#define DGPIN 26
+#define SPIN 14
+#define D1PIN 27
+#define D2PIN 12
+#define DGPIN 13
 
 // Uncomment whatever type you're using!
 #define DHTTYPE DHT11 // DHT 11
@@ -151,22 +152,24 @@ void setup()
   Serial.println(F("Loading configuration..."));
   loadConfig(config);
 
-  if (conMode == "softAP")
+  if (!config.WiFi_Mode)
   {
     // Initialize AP (Access Point)
     WiFi.softAP(ssid, password);
     // Configure AP (Access Point)
     WiFi.softAPConfig(local_ip, gateway, subnet);
+    Serial.println("Wifi-Mode: Access Point");
   }
-  else if (conMode == "Wifi")
+  else
   {
     // Connect to Wi-Fi & print IP
     WiFi.begin(wifi_ssid, wifi_pass);
     waitForWiFiConnectOrReboot(true);
+    Serial.println("Wifi-Mode: WiFi");
   }
 
   // Init and save the time in Esp32
-  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+  configTime(gmtOffset_sec, daylightOffset_sec, TimeServer);
   // getLocalTime();
   // //disconnect WiFi as it's no longer needed
   // WiFi.disconnect(true);
@@ -178,7 +181,7 @@ void setup()
 
 void loop()
 {
-  if (WiFi.status() != WL_CONNECTED)
+  if (WiFi.status() != WL_CONNECTED && config.WiFi_Mode)
   {
     waitForWiFiConnectOrReboot(true);
   }
@@ -196,7 +199,7 @@ void loop()
       emailSent = false;
     }
 
-    if (String(hour) == "00" && String(minute) == "00")
+    if (String(hour) == "03" && String(minute) == "00")
     {
       Serial.println("Daily Reset");
       ESP.restart();

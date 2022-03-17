@@ -31,6 +31,7 @@ void loadConfig(Config &config)
     strlcpy(config.WiFi_password,
             doc["wifi_password"],
             sizeof(config.WiFi_password));
+    config.WiFi_Mode = doc["wifi_mode"];
     strlcpy(config.Email_sender,
             doc["email_sender"],
             sizeof(config.Email_sender));
@@ -41,6 +42,9 @@ void loadConfig(Config &config)
             doc["email_recipient"],
             sizeof(config.Email_recipient));
     config.Time_to_send_email = doc["time_to_send_email"];
+    strlcpy(config.Time_server,
+            doc["time_server"],
+            sizeof(config.Time_server));
     config.GMT_offset_sec = doc["gmt_offset_sec"];
     config.Daylight_offset_sec = doc["daylight_offset_sec"];
     Serial.println("configuration has been loaded");
@@ -71,6 +75,7 @@ void ParseJson(String data, Config &config)
     strlcpy(config.WiFi_password,
             doc["wifi_password"],
             sizeof(config.WiFi_password));
+    config.WiFi_Mode = doc["wifi_mode"];
     strlcpy(config.Email_sender,
             doc["email_sender"],
             sizeof(config.Email_sender));
@@ -81,6 +86,9 @@ void ParseJson(String data, Config &config)
             doc["email_recipient"],
             sizeof(config.Email_recipient));
     config.Time_to_send_email = doc["time_to_send_email"];
+    strlcpy(config.Time_server,
+            doc["time_server"],
+            sizeof(config.Time_server));
     config.GMT_offset_sec = doc["gmt_offset_sec"];
     config.Daylight_offset_sec = doc["daylight_offset_sec"];
     Serial.println("configuration has been parsed");
@@ -146,6 +154,8 @@ void saveConfig(const Config &t_config)
   else
     doc["wifi_password"] = config.WiFi_password;
 
+  doc["wifi_mode"] = t_config.WiFi_Mode;
+
   if (String(t_config.Email_sender) != "")
     doc["email_sender"] = t_config.Email_sender;
   else
@@ -181,6 +191,10 @@ void saveConfig(const Config &t_config)
     doc["gmt_offset_sec"] = t_config.GMT_offset_sec;
   else
     doc["gmt_offset_sec"] = config.GMT_offset_sec;
+  if (String(t_config.Time_server) != "")
+    doc["time_server"] = t_config.Time_server;
+  else
+    doc["time_server"] = config.Time_server;
   if (t_config.Daylight_offset_sec != 0)
     doc["daylight_offset_sec"] = t_config.Daylight_offset_sec;
   else
