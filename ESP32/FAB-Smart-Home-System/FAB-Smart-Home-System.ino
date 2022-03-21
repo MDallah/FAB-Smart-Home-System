@@ -159,6 +159,8 @@ void setup()
     // Configure AP (Access Point)
     WiFi.softAPConfig(local_ip, gateway, subnet);
     Serial.println("Wifi-Mode: Access Point");
+    Serial.print("IP: ");
+    Serial.println(local_ip);
   }
   else
   {
